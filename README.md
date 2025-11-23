@@ -1,4 +1,4 @@
-# AI Studio (Local Transformers)
+# Vision Studio (Local Transformers)
 
 A clean FastAPI web app with four features running on local Hugging Face models (no external APIs):
 
@@ -12,6 +12,11 @@ A clean FastAPI web app with four features running on local Hugging Face models 
 - Python 3.10+
 - Internet on first run to download models
 - GPU optional (CUDA/MPS). CPU works but is slower for text-to-image.
+
+## Team
+
+- P. Narendra Simha (1602-23-748-029)
+- P. Adithya Reddy (1602-23-748-003)
 
 ## Setup
 

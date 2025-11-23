@@ -12,7 +12,7 @@ from PIL import Image
 
 from app.models import get_captioner, get_summarizer, get_sd_pipeline, image_to_base64, apply_style, generate_elaboration
 
-app = FastAPI(title="AI Studio", version="0.1.0")
+app = FastAPI(title="Vision Studio", version="0.1.0")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(BASE_DIR)
@@ -76,14 +76,10 @@ async def txt2img(
         pipe = get_sd_pipeline()
         if seed is None or seed == "":
             seed = random.randint(0, 2**32 - 1)
-        generator = None
-        try:
-            generator = pipe._execution_device
-        except Exception:
-            pass
-        torch_gen = None
         import torch
-        torch_gen = torch.Generator(device="cuda" if (hasattr(pipe, "device") and pipe.device.type=="cuda") else (pipe.device.type if hasattr(pipe, "device") else "cpu")).manual_seed(int(seed))
+        # Use CUDA generator only on CUDA; on CPU and MPS, use CPU generator
+        gen_device = "cuda" if (hasattr(pipe, "device") and getattr(pipe.device, "type", "cpu") == "cuda") else "cpu"
+        torch_gen = torch.Generator(device=gen_device).manual_seed(int(seed))
 
         # Strong negative prompt fallback to enforce realism if none provided
         neg = negative_prompt or (
